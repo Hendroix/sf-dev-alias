@@ -29,6 +29,3 @@ alias gsa="gs apply"
 alias subl='open -a "Sublime Text"'
 alias bbssh="ssh-add -q ~/.ssh/bitbucket_coloplast"
 bbssh;
-eval
-eval "$(zoxide init zsh)" 
-SF_AC_ZSH_SETUP_PATH=/Users/hhupeols/Library/Caches/sf/autocomplete/zsh_setup && test -f $SF_AC_ZSH_SETUP_PATH && source $SF_AC_ZSH_SETUP_PATH; # sf autocomplete setup
