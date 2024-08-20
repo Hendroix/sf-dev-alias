@@ -27,5 +27,3 @@ alias gsp="gs pop"
 alias gsd="gs drop"
 alias gsa="gs apply"
 alias subl='open -a "Sublime Text"'
-alias bbssh="ssh-add -q ~/.ssh/bitbucket_coloplast"
-bbssh;
