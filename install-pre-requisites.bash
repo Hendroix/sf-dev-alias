@@ -10,10 +10,12 @@ echo "Checking for Brew"
 if test ! $(which brew); then
         echo "Installing homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo >> ~/.zprofile
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
     else
         echo "Brew Already Installed"
 fi
-
 
 echo ""
 echo "Updating Brew"
@@ -28,6 +30,25 @@ if test ! $(which git); then
         echo "Git Already Installed"
 fi
 
+current_auto_setup_remote_setting="$(git config --global push.autoSetupRemote)"
+if [[ $current_auto_setup_remote_setting != 'true'  ]]; then
+    echo ""
+    read -p "Do you want to enable auto Setup Remote for git?: " auto_setup_remote
+    if [[ $git_config == [yY] ]]; then
+        git config --global push.autoSetupRemote true
+    fi
+fi
+
+echo ""
+echo "Checking Github CLI"
+if test ! $(which gh); then
+        echo "Installing Github CLI"
+        brew install gh
+    else 
+        echo "Github CLI Already Installed"
+fi
+
+echo ""
 read -p "Do you want to update your git configuration? (Y/N): " git_config
 if [[ $git_config == [yY] ]]; then
     echo ""
@@ -36,14 +57,14 @@ if [[ $git_config == [yY] ]]; then
     read -p "Current local name is $local_name do you want to update? (Y/N): " update_local_name
     if [[ $update_local_name == [yY] ]]; then
        read -p "Enter your new local name: " new_local_name
-       git config --global user.name "$new_local_name"
+       git config user.name "$new_local_name"
     fi
 
     local_email="$(git config user.email)"
     read -p "Current local email is $local_email do you want to update? (Y/N): " update_local_email
     if [[ $update_local_email == [yY] ]]; then
        read -p "Enter your new local email: " new_local_email 
-       git config --global user.email "$new_local_email"
+       git config user.email "$new_local_email"
     fi
 
     echo ""
@@ -68,6 +89,7 @@ echo "Checking for Java"
 if test ! $(which java); then
         echo "Installing Java"
         brew install openjdk@21
+        echo 'export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"' >> ~/.zshrc
     else 
         echo "Java Already Installed"
 fi
