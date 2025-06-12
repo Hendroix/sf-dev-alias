@@ -104,6 +104,15 @@ if test ! $(which node); then
 fi
 
 echo ""
+echo "Checking for PMD"
+if test ! $(which pmd); then
+        echo "Installing PMD"
+        brew install pmd    
+    else 
+        echo "PMD Already Installed"
+fi
+
+echo ""
 echo "Checking for SF CLI"
 if test ! $(which sf); then
         echo "Installing SF CLI"
