@@ -69,15 +69,15 @@ if [[ $git_config == [yY] ]]; then
 
     echo ""
     echo "Global:"
-    global_name="$(git config user.name)"
-    read -p "Current local name is $global_name do you want to update? (Y/N): " update_global_name
+    global_name="$(git config --global user.name)"
+    read -p "Current global name is $global_name do you want to update? (Y/N): " update_global_name
     if [[ $update_global_name == [yY] ]]; then
        read -p "Enter your new local name: " new_global_name
        git config --global user.name "$new_global_name"
     fi
 
     global_email="$(git config --global user.email)"
-    read -p "Current local email is $global_email do you want to update? (Y/N): " update_global_email
+    read -p "Current global email is $global_email do you want to update? (Y/N): " update_global_email
     if [[ $update_global_email == [yY] ]]; then
        read -p "Enter your new local email: " new_global_email
        git config --global user.email "$new_global_email"
