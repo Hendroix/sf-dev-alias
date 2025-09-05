@@ -1,8 +1,9 @@
 #!/bin/bash
-read -p "Do you want to use the .zshrc aliases? (Y/N): " setup_aliases
+cat .zshrc
+read -p "Do you want to add the above aliases? (Y/N): " setup_aliases
 if [[ $setup_aliases == [yY] ]]; then
     echo "Running cp .zshrc ~/.zshrc"
-    cp .zshrc ~/.zshrc
+    cat .zshrc >> ~/.zshrc
 fi
 
 echo ""
@@ -10,9 +11,10 @@ echo "Checking for Brew"
 if test ! $(which brew); then
         echo "Installing homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo >> ~/.zprofile
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        echo >> ~/.zshrc
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
         eval "$(/opt/homebrew/bin/brew shellenv)"
+        source ~/.zshrc
     else
         echo "Brew Already Installed"
 fi
@@ -72,14 +74,14 @@ if [[ $git_config == [yY] ]]; then
     global_name="$(git config --global user.name)"
     read -p "Current global name is $global_name do you want to update? (Y/N): " update_global_name
     if [[ $update_global_name == [yY] ]]; then
-       read -p "Enter your new local name: " new_global_name
+       read -p "Enter your new global name: " new_global_name
        git config --global user.name "$new_global_name"
     fi
 
     global_email="$(git config --global user.email)"
     read -p "Current global email is $global_email do you want to update? (Y/N): " update_global_email
     if [[ $update_global_email == [yY] ]]; then
-       read -p "Enter your new local email: " new_global_email
+       read -p "Enter your new global email: " new_global_email
        git config --global user.email "$new_global_email"
     fi
 fi
@@ -112,6 +114,8 @@ if test ! $(which pmd); then
         echo "PMD Already Installed"
 fi
 
+# Prompt for installation of Window Manager
+
 echo ""
 echo "Checking for SF CLI"
 if test ! $(which sf); then
@@ -124,15 +128,11 @@ fi
 echo ""
 echo "Checking SF CLI Plugins"
 
-commerce=false
-code_analyzer=false
-sfdx_git_delta=false
+code_analyzer=0
+sfdx_git_delta=0
 
 plugins="$(sf plugins)"
 for plugin in $plugins; do
-    if [[ $plugin == '@salesforce/commerce' ]]; then
-        commerce=1
-    fi
 
     if [[ $plugin == 'code-analyzer' ]]; then
         code_analyzer=1
@@ -142,12 +142,6 @@ for plugin in $plugins; do
         sfdx_git_delta=1
     fi
 done
-
-if [[ $commerce == 0 ]]; then
-    sf plugins install @salesforce/commerce
-    else
-        echo "Commerce Plugin Already Installed"
-fi
 
 if [[ $code_analyzer == 0 ]]; then
     sf plugins install code-analyzer
