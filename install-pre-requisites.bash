@@ -114,7 +114,15 @@ if test ! $(which pmd); then
         echo "PMD Already Installed"
 fi
 
-# Prompt for installation of Window Manager
+if ls /Applications | egrep -i "rectangle" > /dev/null 2>&1 ; then
+		echo "Installed"
+	else 
+		echo "Not Installed"
+        read -p "Do you want to install the Window Manager Rectangle? (Y/N): " install_rectangle
+        if [[ $install_rectangle == [yY] ]]; then
+            brew install --cask rectangle
+        fi
+fi
 
 echo ""
 echo "Checking for SF CLI"
