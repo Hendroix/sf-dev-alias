@@ -2,7 +2,7 @@
 cat .zshrc
 read -p "Do you want to add the above aliases? (Y/N): " setup_aliases
 if [[ $setup_aliases == [yY] ]]; then
-    echo "Running cp .zshrc ~/.zshrc"
+    echo "cat .zshrc >> ~/.zshrc"
     cat .zshrc >> ~/.zshrc
 fi
 
