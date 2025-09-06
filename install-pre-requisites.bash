@@ -14,7 +14,7 @@ if test ! $(which brew); then
         echo >> ~/.zshrc
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
         eval "$(/opt/homebrew/bin/brew shellenv)"
-        source ~/.zshrc
+        source ~/.zshrc 2> /dev/null
     else
         echo "Brew Already Installed"
 fi
