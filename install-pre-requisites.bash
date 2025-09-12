@@ -6,8 +6,6 @@ if [[ $setup_aliases == [yY] ]]; then
     cat .zshrc >> ~/.zshrc
 fi
 
-echo ""
-echo "Checking for Brew"
 if test ! $(which brew); then
         echo "Installing homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -16,20 +14,17 @@ if test ! $(which brew); then
         eval "$(/opt/homebrew/bin/brew shellenv)"
         source ~/.zshrc 2> /dev/null
     else
-        echo "Brew Already Installed"
+        printf 'Brew already Installed\n\n'
 fi
 
-echo ""
 echo "Updating Brew"
 brew update
 
-echo ""
-echo "Checking for Git"
 if test ! $(which git); then
         echo "Installing Git"
         brew install git
     else 
-        echo "Git Already Installed"
+        printf 'Git already Installed\n\n'
 fi
 
 current_auto_setup_remote_setting="$(git config --global push.autoSetupRemote)"
@@ -41,16 +36,13 @@ if [[ $current_auto_setup_remote_setting != 'true'  ]]; then
     fi
 fi
 
-echo ""
-echo "Checking Github CLI"
 if test ! $(which gh); then
         echo "Installing Github CLI"
         brew install gh
     else 
-        echo "Github CLI Already Installed"
+        printf 'Github CLI already Installed\n\n'
 fi
 
-echo ""
 read -p "Do you want to update your git configuration? (Y/N): " git_config
 if [[ $git_config == [yY] ]]; then
     echo ""
@@ -93,48 +85,49 @@ if test ! $(which java); then
         brew install openjdk@21
         echo 'export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"' >> ~/.zshrc
     else 
-        echo "Java Already Installed"
+        printf 'Java already Installed\n\n'
 fi
 
-echo ""
-echo "Checking for Node"
 if test ! $(which node); then
         echo "Installing Node"
         brew install node
     else 
-        echo "Node Already Installed"
+        printf 'Node already Installed\n\n'
 fi
 
-echo ""
-echo "Checking for PMD"
 if test ! $(which pmd); then
         echo "Installing PMD"
         brew install pmd    
     else 
-        echo "PMD Already Installed"
+        printf 'PMD already Installed\n\n'
 fi
 
 if ls /Applications | egrep -i "rectangle" > /dev/null 2>&1 ; then
-		echo "Installed"
+		printf 'Rectangle already Installed\n\n'
 	else 
-		echo "Not Installed"
         read -p "Do you want to install the Window Manager Rectangle? (Y/N): " install_rectangle
         if [[ $install_rectangle == [yY] ]]; then
             brew install --cask rectangle
         fi
 fi
 
-echo ""
-echo "Checking for SF CLI"
+if ls /Applications | egrep -i "flycut" > /dev/null 2>&1 ; then
+        printf 'Flycut already Installed\n\n'
+    else
+        read -p "Do you want to install the Clipboard Manager flycut? (Y/N): " install_flycut
+        if [[ $install_flycut == [yY] ]]; then
+            brew install --cask flycut
+        fi
+fi
+
 if test ! $(which sf); then
         echo "Installing SF CLI"
         npm install @salesforce/cli --global    
     else 
-        echo "SF CLI Already Installed"
+        printf 'SF CLI already Installed\n\n'
 fi
 
-echo ""
-echo "Checking SF CLI Plugins"
+printf 'Checking SF CLI Plugins\n'
 
 code_analyzer=0
 sfdx_git_delta=0
@@ -154,11 +147,11 @@ done
 if [[ $code_analyzer == 0 ]]; then
     sf plugins install code-analyzer
     else
-        echo "Code Analyzer Plugin Already Installed"
+        printf 'Code Analyzer Plugin already Installed\n'
 fi
 
 if [[ $sfdx_git_delta == 0 ]]; then
     echo 'y' | sf plugins install sfdx-git-delta
     else
-        echo "SFDX Git Delta Plugin Already Installed"
+        printf 'SFDX Git Delta Plugin already Installed\n'
 fi
