@@ -30,7 +30,7 @@ fi
 current_auto_setup_remote_setting="$(git config --global push.autoSetupRemote)"
 if [[ $current_auto_setup_remote_setting != 'true'  ]]; then
     echo ""
-    read -p "Do you want to enable auto Setup Remote for git?: " auto_setup_remote
+    read -p "Do you want to enable auto Setup Remote for git? (Y/N): " auto_setup_remote
     if [[ $git_config == [yY] ]]; then
         git config --global push.autoSetupRemote true
     fi
