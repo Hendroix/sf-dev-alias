@@ -81,11 +81,21 @@ fi
 echo ""
 echo "Checking for Java"
 if test ! $(which java); then
-        echo "Installing Java"
-        brew install openjdk@21
-        echo 'export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"' >> ~/.zshrc
+        install_java=1
     else 
-        printf 'Java already Installed\n\n'
+        if  echo "$java_path" | egrep -i "homebrew" > /dev/null 2>&1 ;
+            then
+                printf 'Java Installed though homebrew\n\n'
+            else
+                install_java=1
+        fi;
+fi
+
+install_java=0
+if [[ $install_java == 0 ]]; then
+    echo "Installing Java though Homebrew"
+    brew install openjdk@21
+    echo 'export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"' >> ~/.zshrc
 fi
 
 if test ! $(which node); then
