@@ -27,6 +27,15 @@ if test ! $(which git); then
         printf 'Git already Installed\n\n'
 fi
 
+if ls /Applications | egrep -i "cloudflare warp" > /dev/null 2>&1 ; then
+		printf 'Cloudflare WARP already Installed\n\n'
+	else 
+        read -p "Do you want to install the Window Manager Cloudflare WARP? (Y/N): " install_cloudflare_warp
+        if [[ $install_cloudflare_warp == [yY] ]]; then
+            brew install --cask cloudflare-warp
+        fi
+fi
+
 current_auto_setup_remote_setting="$(git config --global push.autoSetupRemote)"
 if [[ $current_auto_setup_remote_setting != 'true'  ]]; then
     echo ""
