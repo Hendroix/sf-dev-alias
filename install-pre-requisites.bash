@@ -121,22 +121,37 @@ if test ! $(which pmd); then
         printf 'PMD already Installed\n\n'
 fi
 
-if ls /Applications | egrep -i "rectangle" > /dev/null 2>&1 ; then
-		printf 'Rectangle already Installed\n\n'
+vorssaint_installed=0
+if ls /Applications | egrep -i "Vorssaint" > /dev/null 2>&1 ; then
+		printf 'Vorssaint already Installed\n\n'
+        vorssaint_installed=1
 	else 
-        read -p "Do you want to install the Window Manager Rectangle? (Y/N): " install_rectangle
-        if [[ $install_rectangle == [yY] ]]; then
-            brew install --cask rectangle
+        read -p "Do you want to install Vorssaint? (Y/N): " install_vorssaint
+        if [[ $install_vorssaint == [yY] ]]; then
+            if brew install --cask vorssaint; then
+                vorssaint_installed=1
+            fi
         fi
 fi
 
-if ls /Applications | egrep -i "flycut" > /dev/null 2>&1 ; then
-        printf 'Flycut already Installed\n\n'
-    else
-        read -p "Do you want to install the Clipboard Manager flycut? (Y/N): " install_flycut
-        if [[ $install_flycut == [yY] ]]; then
-            brew install --cask flycut
-        fi
+if [[ $vorssaint_installed == 0 ]]; then
+    if ls /Applications | egrep -i "rectangle" > /dev/null 2>&1 ; then
+            printf 'Rectangle already Installed\n\n'
+        else
+            read -p "Do you want to install the Window Manager Rectangle? (Y/N): " install_rectangle
+            if [[ $install_rectangle == [yY] ]]; then
+                brew install --cask rectangle
+            fi
+    fi
+
+    if ls /Applications | egrep -i "flycut" > /dev/null 2>&1 ; then
+            printf 'Flycut already Installed\n\n'
+        else
+            read -p "Do you want to install the Clipboard Manager flycut? (Y/N): " install_flycut
+            if [[ $install_flycut == [yY] ]]; then
+                brew install --cask flycut
+            fi
+    fi
 fi
 
 if test ! $(which sf); then
