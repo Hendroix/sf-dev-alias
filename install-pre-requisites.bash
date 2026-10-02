@@ -2,11 +2,19 @@
 cat .zshrc
 read -p "Do you want to add the above aliases? (Y/N): " setup_aliases
 if [[ $setup_aliases == [yY] ]]; then
-    echo "cat .zshrc >> ~/.zshrc"
-    cat .zshrc >> ~/.zshrc
+    aliases_added=0
+    while IFS= read -r alias_line || [[ -n $alias_line ]]; do
+        if ! grep -Fqx -e "$alias_line" ~/.zshrc 2> /dev/null; then
+            if [[ $aliases_added == 0 ]]; then
+                printf '\n' >> ~/.zshrc
+                aliases_added=1
+            fi
+            printf '%s\n' "$alias_line" >> ~/.zshrc
+        fi
+    done < .zshrc
 fi
 
-if test ! $(which brew); then
+if ! command -v brew > /dev/null 2>&1; then
         echo "Installing homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo >> ~/.zshrc
@@ -20,7 +28,7 @@ fi
 echo "Updating Brew"
 brew update
 
-if test ! $(which git); then
+if ! command -v git > /dev/null 2>&1; then
         echo "Installing Git"
         brew install git
     else 
@@ -30,7 +38,7 @@ fi
 if ls /Applications | egrep -i "cloudflare warp" > /dev/null 2>&1 ; then
 		printf 'Cloudflare WARP already Installed\n\n'
 	else 
-        read -p "Do you want to install the Window Manager Cloudflare WARP? (Y/N): " install_cloudflare_warp
+        read -p "Do you want to install the VPN Cloudflare WARP? (Y/N): " install_cloudflare_warp
         if [[ $install_cloudflare_warp == [yY] ]]; then
             brew install --cask cloudflare-warp
         fi
@@ -40,12 +48,12 @@ current_auto_setup_remote_setting="$(git config --global push.autoSetupRemote)"
 if [[ $current_auto_setup_remote_setting != 'true'  ]]; then
     echo ""
     read -p "Do you want to enable auto Setup Remote for git? (Y/N): " auto_setup_remote
-    if [[ $git_config == [yY] ]]; then
+    if [[ $auto_setup_remote == [yY] ]]; then
         git config --global push.autoSetupRemote true
     fi
 fi
 
-if test ! $(which gh); then
+if ! command -v gh > /dev/null 2>&1; then
         echo "Installing Github CLI"
         brew install gh
     else 
@@ -89,32 +97,24 @@ fi
 
 echo ""
 echo "Checking for Java"
-if test ! $(which java); then
-        install_java=1
-    else 
-        if  echo "$java_path" | egrep -i "homebrew" > /dev/null 2>&1 ;
-            then
-                printf 'Java Installed though homebrew\n\n'
-            else
-                install_java=1
-        fi;
+if ! brew list --versions openjdk@21 > /dev/null; then
+    echo "Installing Java through Homebrew"
+    brew install openjdk@21 || exit 1
 fi
 
-install_java=0
-if [[ $install_java == 0 ]]; then
-    echo "Installing Java though Homebrew"
-    brew install openjdk@21
-    echo 'export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"' >> ~/.zshrc
+java_path_line="export PATH=\"/opt/homebrew/opt/openjdk@21/bin:\$PATH\""
+if ! grep -Fqx "$java_path_line" ~/.zshrc; then
+    printf '%s\n' "$java_path_line" >> ~/.zshrc
 fi
 
-if test ! $(which node); then
+if ! command -v node > /dev/null 2>&1; then
         echo "Installing Node"
         brew install node
     else 
         printf 'Node already Installed\n\n'
 fi
 
-if test ! $(which pmd); then
+if ! command -v pmd > /dev/null 2>&1; then
         echo "Installing PMD"
         brew install pmd    
     else 
@@ -154,7 +154,7 @@ if [[ $vorssaint_installed == 0 ]]; then
     fi
 fi
 
-if test ! $(which sf); then
+if ! command -v sf > /dev/null 2>&1; then
         echo "Installing SF CLI"
         npm install @salesforce/cli --global    
     else 
